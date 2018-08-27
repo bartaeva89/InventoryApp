@@ -18,22 +18,21 @@ public class ProductDbHelper extends SQLiteOpenHelper {
     }
 
 
-
     @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
-        String SQL_CREATE_PRODUCTS_TABLE = "CREATE TABLE " + ProductContract.ProductEntry.TABLE_NAME+ " ("
-                + ProductContract.ProductEntry._ID+ " INTEGER PRIMARY KEY AUTOINCREMENT, "
+        String SQL_CREATE_PRODUCTS_TABLE = "CREATE TABLE " + ProductContract.ProductEntry.TABLE_NAME + " ("
+                + ProductContract.ProductEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
                 + ProductContract.ProductEntry.COLUMN_PRODUCT_NAME + " TEXT NOT NULL, "
-                + ProductContract.ProductEntry.COLUMN_PRICE+" INTEGER NOT NULL DEFAULT 10, "
-                + ProductContract.ProductEntry.COLUMN_QUANTITY+" INTEGER NOT NULL DEFAULT 0, "
-                + ProductContract.ProductEntry.COLUMN_SUPPLIER_NAME+" TEXT NOT NULL, "
-                + ProductContract.ProductEntry.COLUMN_SUPPLIER_PHONE_NUMBER+" TEXT); ";
+                + ProductContract.ProductEntry.COLUMN_PRICE + " INTEGER NOT NULL DEFAULT 10, "
+                + ProductContract.ProductEntry.COLUMN_QUANTITY + " INTEGER NOT NULL DEFAULT 0, "
+                + ProductContract.ProductEntry.COLUMN_SUPPLIER_NAME + " TEXT NOT NULL, "
+                + ProductContract.ProductEntry.COLUMN_SUPPLIER_PHONE_NUMBER + " TEXT); ";
         sqLiteDatabase.execSQL(SQL_CREATE_PRODUCTS_TABLE);
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase sqLiteDatabase, int i, int i1) {
-        sqLiteDatabase.execSQL("DROP TABLE IF EXISTS"+sqLiteDatabase);
+        sqLiteDatabase.execSQL("DROP TABLE IF EXISTS" + sqLiteDatabase);
         onCreate(sqLiteDatabase);
     }
 }

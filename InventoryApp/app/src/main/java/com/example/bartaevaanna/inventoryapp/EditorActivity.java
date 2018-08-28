@@ -17,6 +17,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -30,8 +31,10 @@ public class EditorActivity extends AppCompatActivity implements
     private EditText mQuantityEditText;
     private EditText mSupplierNameEditText;
     private EditText mSupplierPhoneEditText;
+    private Button increase;
+    private Button decrease;
+    private Button phoneButton;
     private boolean mProductHasChanged = false;
-
     private View.OnTouchListener mTouchListener = new View.OnTouchListener() {
         @Override
         public boolean onTouch(View view, MotionEvent motionEvent) {
@@ -53,12 +56,48 @@ public class EditorActivity extends AppCompatActivity implements
             setTitle(getString(R.string.editor_activity_title_edit_product));
             getLoaderManager().initLoader(EXISTING_PRODUCT_LOADER, null, this);
         }
-
-        mNameEditText=(EditText)findViewById(R.id.product_name);
-        mPriceEditText=(EditText)findViewById(R.id.price);
-        mQuantityEditText=(EditText)findViewById(R.id.quantity);
-        mSupplierNameEditText=(EditText)findViewById(R.id.supplier_name);
-        mSupplierPhoneEditText=(EditText)findViewById(R.id.supplier_phone_number);
+        mNameEditText = findViewById(R.id.product_name);
+        mPriceEditText = findViewById(R.id.price);
+        mQuantityEditText = findViewById(R.id.quantity);
+        mSupplierNameEditText = findViewById(R.id.supplier_name);
+        mSupplierPhoneEditText = findViewById(R.id.supplier_phone_number);
+        increase = findViewById(R.id.inc);
+        decrease = findViewById(R.id.desc);
+        phoneButton = findViewById(R.id.phoneButton);
+        decrease.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (mQuantityEditText.getText().toString().equals("")) {
+                    mQuantityEditText.setText("0");
+                } else {
+                    int quantity = Integer.parseInt(mQuantityEditText.getText().toString());
+                    if (quantity > 0) {
+                        quantity--;
+                    }
+                    mQuantityEditText.setText(String.valueOf(quantity));
+                }
+            }
+        });
+        increase.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (mQuantityEditText.getText().toString().equals("")) {
+                    mQuantityEditText.setText("0");
+                } else {
+                    int quantity = Integer.parseInt(mQuantityEditText.getText().toString());
+                    quantity++;
+                    mQuantityEditText.setText(String.valueOf(quantity));
+                }
+            }
+        });
+        phoneButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String phone = mSupplierPhoneEditText.getText().toString();
+                Intent intent = new Intent(Intent.ACTION_DIAL, Uri.fromParts("tel", phone, null));
+                startActivity(intent);
+            }
+        });
         mNameEditText.setOnTouchListener(mTouchListener);
         mPriceEditText.setOnTouchListener(mTouchListener);
         mQuantityEditText.setOnTouchListener(mTouchListener);
@@ -66,13 +105,14 @@ public class EditorActivity extends AppCompatActivity implements
         mSupplierPhoneEditText.setOnTouchListener(mTouchListener);
     }
 
-    private void saveProduct(){
-        String nameString=mNameEditText.getText().toString().trim();
-        String priceString=mPriceEditText.getText().toString().trim();
-        String quantityString=mQuantityEditText.getText().toString().trim();
-        String supplierNameString=mSupplierNameEditText.getText().toString().trim();
-        String supplierPhoneNumber=mSupplierPhoneEditText.getText().toString().trim();
-        if (mCurrentProductUri == null && TextUtils.isEmpty(nameString) && TextUtils.isEmpty(priceString)&&TextUtils.isEmpty(quantityString)&&TextUtils.isEmpty(supplierNameString)&&TextUtils.isEmpty(supplierPhoneNumber)){
+    private void saveProduct() {
+        String nameString = mNameEditText.getText().toString().trim();
+        String priceString = mPriceEditText.getText().toString().trim();
+        String quantityString = mQuantityEditText.getText().toString().trim();
+        String supplierNameString = mSupplierNameEditText.getText().toString().trim();
+        String supplierPhoneNumber = mSupplierPhoneEditText.getText().toString().trim();
+        if (TextUtils.isEmpty(nameString) || TextUtils.isEmpty(priceString) || TextUtils.isEmpty(quantityString) || TextUtils.isEmpty(supplierNameString) || TextUtils.isEmpty(supplierPhoneNumber)) {
+            Toast.makeText(this, "Please fill all field!", Toast.LENGTH_LONG).show();
             return;
         }
         ContentValues values = new ContentValues();
@@ -100,6 +140,8 @@ public class EditorActivity extends AppCompatActivity implements
                         Toast.LENGTH_SHORT).show();
             }
         }
+        finish();
+
     }
 
     @Override
@@ -122,9 +164,7 @@ public class EditorActivity extends AppCompatActivity implements
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_save:
-                // Save pet to database
                 saveProduct();
-                finish();
                 return true;
             case R.id.action_delete:
                 showDeleteConfirmationDialog();
@@ -172,7 +212,7 @@ public class EditorActivity extends AppCompatActivity implements
                 ProductContract.ProductEntry.COLUMN_QUANTITY,
                 ProductContract.ProductEntry.COLUMN_SUPPLIER_NAME,
                 ProductContract.ProductEntry.COLUMN_SUPPLIER_PHONE_NUMBER
-                };
+        };
         return new CursorLoader(this,
                 mCurrentProductUri,
                 projection,
@@ -188,15 +228,15 @@ public class EditorActivity extends AppCompatActivity implements
         }
         if (cursor.moveToFirst()) {
             int nameColumnIndex = cursor.getColumnIndex(ProductContract.ProductEntry.COLUMN_PRODUCT_NAME);
-            int priceColumnIndex=cursor.getColumnIndex(ProductContract.ProductEntry.COLUMN_PRICE);
-            int quantityColumnIndex=cursor.getColumnIndex(ProductContract.ProductEntry.COLUMN_QUANTITY);
-            int supplierNameColumnIndex=cursor.getColumnIndex(ProductContract.ProductEntry.COLUMN_SUPPLIER_NAME);
-            int supplierPhoneIndex=cursor.getColumnIndex(ProductContract.ProductEntry.COLUMN_SUPPLIER_PHONE_NUMBER);
+            int priceColumnIndex = cursor.getColumnIndex(ProductContract.ProductEntry.COLUMN_PRICE);
+            int quantityColumnIndex = cursor.getColumnIndex(ProductContract.ProductEntry.COLUMN_QUANTITY);
+            int supplierNameColumnIndex = cursor.getColumnIndex(ProductContract.ProductEntry.COLUMN_SUPPLIER_NAME);
+            int supplierPhoneIndex = cursor.getColumnIndex(ProductContract.ProductEntry.COLUMN_SUPPLIER_PHONE_NUMBER);
             String name = cursor.getString(nameColumnIndex);
-            int price= cursor.getInt(priceColumnIndex);
-            int quantity=cursor.getInt(quantityColumnIndex);
-            String supplierName=cursor.getString(supplierNameColumnIndex);
-            String supplierPhone=cursor.getString(supplierPhoneIndex);
+            int price = cursor.getInt(priceColumnIndex);
+            int quantity = cursor.getInt(quantityColumnIndex);
+            String supplierName = cursor.getString(supplierNameColumnIndex);
+            String supplierPhone = cursor.getString(supplierPhoneIndex);
             mNameEditText.setText(name);
             mPriceEditText.setText(String.valueOf(price));
             mQuantityEditText.setText(String.valueOf(quantity));
@@ -213,9 +253,6 @@ public class EditorActivity extends AppCompatActivity implements
         mSupplierNameEditText.setText("");
         mSupplierPhoneEditText.setText("");
     }
-
-
-
 
     private void showUnsavedChangesDialog(
             DialogInterface.OnClickListener discardButtonClickListener) {
@@ -251,8 +288,6 @@ public class EditorActivity extends AppCompatActivity implements
         AlertDialog alertDialog = builder.create();
         alertDialog.show();
     }
-
-
 
     private void deleteProduct() {
         if (mCurrentProductUri != null) {

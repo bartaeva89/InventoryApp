@@ -17,14 +17,11 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.Toast;
 
-public class MainActivity extends AppCompatActivity  implements
-        LoaderManager.LoaderCallbacks<Cursor>{
-
-    /** Identifier for the pet data loader */
+public class MainActivity extends AppCompatActivity implements
+        LoaderManager.LoaderCallbacks<Cursor> {
     private static final int PRODUCT_LOADER = 0;
-
-    /** Adapter for the ListView */
     ProductCursorAdapter mCursorAdapter;
 
 
@@ -32,7 +29,6 @@ public class MainActivity extends AppCompatActivity  implements
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
         Button editButton = (Button) findViewById(R.id.edit_button);
         editButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -41,7 +37,6 @@ public class MainActivity extends AppCompatActivity  implements
                 startActivity(intent);
             }
         });
-
         ListView productListView = (ListView) findViewById(R.id.list);
         View emptyView = findViewById(R.id.empty_view);
         productListView.setEmptyView(emptyView);
@@ -67,7 +62,6 @@ public class MainActivity extends AppCompatActivity  implements
         values.put(ProductContract.ProductEntry.COLUMN_QUANTITY, 5);
         values.put(ProductContract.ProductEntry.COLUMN_SUPPLIER_NAME, "Tom");
         values.put(ProductContract.ProductEntry.COLUMN_SUPPLIER_PHONE_NUMBER, "+36(20)3333333");
-        Uri newUri = getContentResolver().insert(ProductContract.ProductEntry.CONTENT_URI, values);
     }
 
     private void deleteAllProducts() {
@@ -94,18 +88,32 @@ public class MainActivity extends AppCompatActivity  implements
         return super.onOptionsItemSelected(item);
     }
 
+    public void productSaleCount(int productID, int productQuantity) {
+        productQuantity = productQuantity - 1;
+        if (productQuantity >= 0) {
+            ContentValues values = new ContentValues();
+            values.put(ProductContract.ProductEntry.COLUMN_QUANTITY, productQuantity);
+            Uri updateUri = ContentUris.withAppendedId(ProductContract.ProductEntry.CONTENT_URI, productID);
+            int rowsAffected = getContentResolver().update(updateUri, values, null, null);
+            Toast.makeText(this, "Quantity was change: " + rowsAffected, Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(this, "Product was finish :( , buy another Product", Toast.LENGTH_SHORT).show();
+        }
+    }
+
 
     public Loader<Cursor> onCreateLoader(int i, Bundle bundle) {
         String[] projection = {
                 ProductContract.ProductEntry._ID,
                 ProductContract.ProductEntry.COLUMN_PRODUCT_NAME,
-                ProductContract.ProductEntry.COLUMN_SUPPLIER_PHONE_NUMBER };
-        return new CursorLoader(this,   // Parent activity context
-                ProductContract.ProductEntry.CONTENT_URI,   // Provider content URI to query
-                projection,             // Columns to include in the resulting Cursor
-                null,                   // No selection clause
-                null,                   // No selection arguments
-                null);                  // Default sort order
+                ProductContract.ProductEntry.COLUMN_QUANTITY,
+                ProductContract.ProductEntry.COLUMN_PRICE};
+        return new CursorLoader(this,
+                ProductContract.ProductEntry.CONTENT_URI,
+                projection,
+                null,
+                null,
+                null);
     }
 
     @Override

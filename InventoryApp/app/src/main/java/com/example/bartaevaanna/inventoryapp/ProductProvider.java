@@ -8,15 +8,12 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.util.Log;
 
 public class ProductProvider extends ContentProvider {
-
     public static final String LOG_TAG = ProductProvider.class.getSimpleName();
     private static final int PRODUCTS = 100;
     private static final int PRODUCT_ID = 101;
-
     private static final UriMatcher sUriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
 
     static {
@@ -144,33 +141,26 @@ public class ProductProvider extends ContentProvider {
                 throw new IllegalArgumentException("Product requires a price");
             }
         }
-
         if (values.containsKey(ProductContract.ProductEntry.COLUMN_QUANTITY)) {
             Integer quantity = values.getAsInteger(ProductContract.ProductEntry.COLUMN_QUANTITY);
             if (quantity == null) {
                 throw new IllegalArgumentException("Product requires a quantity");
             }
         }
-
         if (values.containsKey(ProductContract.ProductEntry.COLUMN_SUPPLIER_NAME)) {
             String supplierName = values.getAsString(ProductContract.ProductEntry.COLUMN_SUPPLIER_NAME);
             if (supplierName == null) {
                 throw new IllegalArgumentException("Product requires a supplier name");
             }
         }
-
         if (values.size() == 0) {
             return 0;
         }
-
         SQLiteDatabase database = mDbHelper.getWritableDatabase();
-
         int rowsUpdated = database.update(ProductContract.ProductEntry.TABLE_NAME, values, selection, selectionArgs);
-
         if (rowsUpdated != 0) {
             getContext().getContentResolver().notifyChange(uri, null);
         }
-
         return rowsUpdated;
 
     }
@@ -185,7 +175,6 @@ public class ProductProvider extends ContentProvider {
                 rowsDeleted = database.delete(ProductContract.ProductEntry.TABLE_NAME, selection, selectionArgs);
                 break;
             case PRODUCT_ID:
-                // Delete a single row given by the ID in the URI
                 selection = ProductContract.ProductEntry._ID + "=?";
                 selectionArgs = new String[]{String.valueOf(ContentUris.parseId(uri))};
                 rowsDeleted = database.delete(ProductContract.ProductEntry.TABLE_NAME, selection, selectionArgs);
@@ -198,5 +187,4 @@ public class ProductProvider extends ContentProvider {
         }
         return rowsDeleted;
     }
-
 }

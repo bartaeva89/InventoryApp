@@ -3,35 +3,67 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".EditorActivity"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    tools:context=".EditorActivity">
+
     <EditText
         android:id="@+id/product_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="@string/name_hint"
-        android:inputType="text"/>
+        android:inputType="text" />
+
     <EditText
         android:id="@+id/price"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="@string/price_hint"
-        android:inputType="number"/>
+        android:inputType="number" />
+
     <EditText
         android:id="@+id/quantity"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="@string/quantity_hint"
-        android:inputType="number"/>
+        android:inputType="number" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/desc"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/desc_button" />
+
+        <Button
+            android:id="@+id/inc"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/inc_button" />
+
+    </LinearLayout>
+
     <EditText
         android:id="@+id/supplier_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="@string/supplier_name_hint"/>
+        android:hint="@string/supplier_name_hint" />
+
     <EditText
         android:id="@+id/supplier_phone_number"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:inputType="phone"
-        android:hint="@string/supplier_phone_hint"/>
+        android:hint="@string/supplier_phone_hint"
+        android:inputType="phone" />
+
+    <Button
+        android:id="@+id/phoneButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/call_button" />
 </LinearLayout>

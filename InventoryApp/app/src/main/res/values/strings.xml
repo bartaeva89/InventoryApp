@@ -27,40 +27,10 @@
     <string name="keep_editing">Keep Editing</string>
     <string name="delete_dialog_msg">Delete this product?</string>
     <string name="unknown_phone">Unknown phone</string>
-   <!--
+    <string name="sales_button">Sales</string>
+    <string name="desc_button">Descrease</string>
+    <string name="inc_button">Increase</string>
+    <string name="call_button">Call supplier</string>
 
-
-
-
-
-
-
-
-
-
-
-
-
-    <string name="category_overview">Overview</string>
-    <string name="unit_pet_weight">kg</string>
-
-
-
-
-    <string name="category_gender">Gender</string>-->
-
-    <!-- Label for measurement information in the editor [CHAR LIMIT=30] -->
-    <!--<string name="category_measurement">Measurement</string>-->
-
-    <!-- Text hint for name field in the editor [CHAR LIMIT=30] -->
-    <!--<string name="hint_pet_name">Name</string>
-
-
-    <string name="hint_pet_breed">Breed</string>
-
-
-    <string name="hint_pet_weight">Weight</string>
-
- -->
 
 </resources>

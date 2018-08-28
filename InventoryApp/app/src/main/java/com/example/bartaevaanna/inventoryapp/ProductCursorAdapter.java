@@ -6,13 +6,14 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.CursorAdapter;
 import android.widget.TextView;
 
 public class ProductCursorAdapter extends CursorAdapter {
 
     public ProductCursorAdapter(Context context, Cursor c) {
-        super(context, c, 0 );
+        super(context, c, 0);
     }
 
     @Override
@@ -21,18 +22,29 @@ public class ProductCursorAdapter extends CursorAdapter {
     }
 
     @Override
-    public void bindView(View view, Context context, Cursor cursor) {
+    public void bindView(View view, final Context context, Cursor cursor) {
         TextView nameTextView = (TextView) view.findViewById(R.id.name);
-        TextView summaryTextView = (TextView) view.findViewById(R.id.phone);
+        final TextView quantityTextView = (TextView) view.findViewById(R.id.quantity);
+        final TextView priceTextView = (TextView) view.findViewById(R.id.price);
+        Button salesButton = (Button) view.findViewById(R.id.sales_button);
         int nameColumnIndex = cursor.getColumnIndex(ProductContract.ProductEntry.COLUMN_PRODUCT_NAME);
-        int phoneNumberColumnIndex = cursor.getColumnIndex(ProductContract.ProductEntry.COLUMN_SUPPLIER_PHONE_NUMBER);
+        int quantityColumnIndex = cursor.getColumnIndex(ProductContract.ProductEntry.COLUMN_QUANTITY);
+        int priceColumnIndex = cursor.getColumnIndex(ProductContract.ProductEntry.COLUMN_PRICE);
+        final int columnIdIndex = cursor.getColumnIndex(ProductContract.ProductEntry._ID);
         String productName = cursor.getString(nameColumnIndex);
-        String phoneNumber = cursor.getString(phoneNumberColumnIndex);
-        if (TextUtils.isEmpty(phoneNumber)) {
-            phoneNumber = context.getString(R.string.unknown_phone);
-        }
+        final int quantity = cursor.getInt(quantityColumnIndex);
+        int price = cursor.getInt(priceColumnIndex);
+        final String productID = cursor.getString(columnIdIndex);
         nameTextView.setText(productName);
-        summaryTextView.setText(phoneNumber);
+        quantityTextView.setText(String.valueOf(quantity));
+        priceTextView.setText(String.valueOf(price));
+        salesButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                MainActivity Activity = (MainActivity) context;
+                Activity.productSaleCount(Integer.valueOf(productID), Integer.valueOf(quantity));
+            }
+        });
     }
 
 

@@ -47,6 +47,7 @@ public class EditorActivity extends AppCompatActivity implements
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_editor);
+        this.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         Intent intent = getIntent();
         mCurrentProductUri = intent.getData();
         if (mCurrentProductUri == null) {
